@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixes Result</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('background.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            padding: 20px;
+            overflow: hidden; /* Prevent scrolling initially */
+        }
+        h1 {
+            color: #000101;
+            margin-bottom: 150px;
+        }
+        .result {
+            font-size: 15px;
+            color: #2c3e50;
+            width: 60%;
+            max-width: 900px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            text-align: center;
+            max-height: 300px;
+            overflow: hidden;
+        }
+        .result.overflow {
+            overflow: auto;
+        }
+        .bold-center {
+            font-weight: bold;
+            color: black;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .no-fixes {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0f0909;
+        }
+        button {
+            background-color: #039b2e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fixes Result</h1>
+    <div class="result" id="result"></div>
+    <button id="jiraBtn">Enter Jira</button>
+
+    <script>
+        // Render extracted fixes
+        document.addEventListener("DOMContentLoaded", () => {
+            const result = localStorage.getItem("FixesResult");
+            const resultDiv = document.getElementById("result");
+
+            if (result) {
+                const parts = result.split("\n\n");
+                const firstLine = parts[0] || "";
+                const keyInText = parts[1] || "";
+
+                resultDiv.innerHTML = `
+                    <div class="bold-center">${firstLine}</div>
+                    <div>${keyInText}</div>
+                `;
+
+                if (resultDiv.scrollHeight > resultDiv.clientHeight) {
+                    resultDiv.classList.add("overflow");
+                    document.body.style.overflow = "auto";
+                } else {
+                    document.body.style.overflow = "hidden";
+                }
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="no-fixes">
+                        No fixes are found.
+                    </div>
+                `;
+                document.body.style.overflow = "hidden";
+            }
+        });
+
+        // Hook up Enter Jira button via IPC bridge (preload.js)
+        document.getElementById("jiraBtn").addEventListener("click", () => {
+            window.electronAPI.runJira();
+        });
+
+        // Listen for Python execution status
+        window.electronAPI.onJiraStatus((data) => {
+            if (data.success) {
+                alert("✅ " + data.message);
+            } else {
+                alert("❌ Failed: " + data.message);
+            }
+        });
+    </script>
+</body>
+</html>
