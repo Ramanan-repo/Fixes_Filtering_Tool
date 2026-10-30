@@ -1,0 +1,18 @@
+{
+  "name": "fixes-filtering-tool",
+  "version": "1.0.0",
+  "description": "Standalone Electron Tool for Fixes Filtering",
+  "author": [
+    "Ramanan Raj <ramanan.raj@wipro.com>",
+    "Divyanshi Negi <divyanshi.negi@wipro.com>"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager . FixesFilteringTool --platform=win32 --arch=x64 --icon=icon.ico --out=dist --overwrite"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-packager": "^17.1.2"
+  }
+}

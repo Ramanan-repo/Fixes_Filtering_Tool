@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixes Filtering</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('background.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: none;
+            padding: 20px;
+        }
+        h1 {
+            color: #000101;
+            text-align: top;
+            margin-bottom: 120px;
+        }
+        .sidebar {
+            display: flex;
+            justify-content: top;
+            flex-wrap: wrap;
+            gap: 35px;
+            margin: 0px;
+        }
+        .sidebar a {
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 12px 10px;
+            font-size: 16px;
+            text-align: top;
+            text-decoration: none;
+            border: 2px solid #333;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+            color: white;
+            transform: scale(1.05);
+        }
+        p {
+            color: #010305;
+            font-family: 'Arial', sans-serif;
+            text-align: justify;
+            margin-top: 70px;
+        }
+        textarea {
+            width: 90%;
+            max-width: 700px;
+            height: 140px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #070101;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #039b2e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+    </style>
+    <script>
+        function extractSyncNumbers() {
+            const paragraph = document.getElementById("paragraph").value;
+    
+            // Regex to match SYNC-######, GARM-####, TELE-####, ECG-######, SXM-####, VIP-#####
+            const regex = /\b(?:SYNC-\d{6}|GARM-\d{4}|TELE-\d{4}|ECG-\d{6}|SXM-\d{4}|VIP-\d{5}|AOS-\d{6}|CYC-\d{5})\b/g;
+    
+            const matches = paragraph.match(regex);
+    
+            if (matches) {
+                const uniqueMatches = [...new Set(matches)];
+                const result = `Found ${uniqueMatches.length} Fixes (Copy paste the following fixes in Jira):\n\nkey in(${uniqueMatches.join(", ")})`;
+    
+                // Save the result in localStorage
+                localStorage.setItem("FixesResult", result);
+            } else {
+                // Save no result message in localStorage
+                localStorage.setItem("FixesResult", "No fixes are found.");
+            }
+    
+            // Redirect to the result page
+            window.location.href = "result.html";
+        }
+    </script>        
+</head>
+<body>
+    <h1>Fixes Extractor</h1>
+    <div class="sidebar">
+        <a href="https://fnvbuild-gcp.ford.com/job/SYNC4/">SYNC</a>
+        <a href="https://jenkins2.example.com">PHOENIX</a>
+        <a href="https://jenkins3.example.com">VIP</a>
+        <a href="https://19.32.98.41/job/SYNC4/job/IntegrationsMaster/job/Sync4-master-CYCLONE/">CYCLONE</a>
+        <a href="https://fnvbuild-gcp.ford.com/job/ECG/">ECG</a>
+        <a href="https://jenkins4.example.com">Test</a>
+    </div>
+    <p>Paste a paragraph below</p>
+    <textarea id="paragraph" placeholder="Paste your paragraph here..."></textarea>
+    <button onclick="extractSyncNumbers()">Extract the fixes</button>
+</body>
+</html>
